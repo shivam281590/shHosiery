@@ -1,0 +1,348 @@
+<%- include('../layout/master-top') %>
+<div class="d-flex justify-content-end m-2">
+  <a href="/admin<%-adminRoutes.invoiceList %>" class="btn btn-primary">Back</a>
+</div>
+  <div class="card">
+    <div class="card-body">
+      <form action="/admin<%-adminRoutes.createInvoice  %>" method="POST">
+        <input type="hidden" name="_csrf" value="<%-csrfToken%>">
+        <style>
+          .error{
+            color: red;
+          }
+        </style>
+        <h5 class="card-title fw-semibold mb-4">Create Invoice</h5>
+        <div class="card">
+          <div class="card-body">
+            <h6 class="card-title fw-semibold mb-4">Bill To</h6>
+              <div class="mb-3">
+                <label for="cType" class="form-label">Customer Type</label>
+                <select name="cType" class="form-control" id="cType" value="<%-cType  %>">
+                  <option value="fixed">FIXED</option>
+                  <option value="cash">CASH</option>
+                </select>
+                <% if (cTypeError) { %>
+                  <span class="error-shopName"><%- cTypeError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="customerId" class="form-label">Existing Customer</label>
+                <select class="form-control" name="customerId" id="customerId" value="<%-customerId  %>">
+                  <option>Select Customer</option>
+                  <% allCustomers && allCustomers.forEach(cust=>{ %>
+                    <option value="<%-cust.id %>"><%-cust.shopName %><%-(cust.name?`(${cust.name})`:'') %></option>
+                    <% }) %>
+                </select>
+              </div>
+  
+              <div class="mb-3">
+                <label for="shopName" class="form-label">Shop Name</label>
+                <input type="text" class="form-control" id="shopName" aria-describedby="emailHelp" name="shopName" value="<%-shopName  %>">
+                <% if (shopNameError) { %>
+                  <span class="error-shopName"><%- shopNameError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="gst" class="form-label">GST</label>
+                <input type="text" class="form-control" id="gst" aria-describedby="emailHelp" name="gst" value="<%-gst  %>">
+                <% if (gstError) { %>
+                  <span class="error-shopName"><%- gstError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="mobile" class="form-label">Mobile</label>
+                <input type="tel" class="form-control" id="mobile" aria-describedby="emailHelp" name="mobile" value="<%-mobile  %>">
+                <% if (mobileError) { %>
+                  <span class="error-shopName" style="color: red;"><%- mobileError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="emailAddress" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="emailAddress" aria-describedby="emailHelp" name="email" value="<%-email %>">
+                <% if (emailAddressError) { %>
+                  <span class="error-shopName"><%- emailAddressError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" aria-describedby="emailHelp" name="address" value="<%-address  %>">
+                <% if (addressError) { %>
+                  <span class="error-shopName"><%- addressError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" aria-describedby="emailHelp" name="city" value="<%-city %>">
+                <% if (cityError) { %>
+                  <span class="error-shopName"><%- cityError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" aria-describedby="emailHelp" name="state" value="<%-state %>">
+                <% if (stateError) { %>
+                  <span class="error-shopName"><%- stateError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" class="form-control" id="country" aria-describedby="emailHelp" name="country" value="<%-country  %>">
+                <% if (countryError) { %>
+                  <span class="error-shopName"><%- countryError %></span>
+                  <% } %>
+              </div>
+  
+              <div class="mb-3">
+                <label for="pinCode" class="form-label">Pin Code</label>
+                <input type="number" class="form-control" id="pinCode" aria-describedby="emailHelp" name="pinCode" value="<%-pinCode  %>">
+                <% if (pinCodeError) { %>
+                  <span class="error-shopName"><%- pinCodeError %></span>
+                  <% } %>
+              </div>
+
+            
+
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body mt-2">
+            <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
+              <h6 class="card-title fw-semibold m-0 p-0">Item Description</h6>
+              <button type="button" class="btn btn-primary" onclick="addItem(event)">Add Item</button>
+            </div>
+            <div id="itemList">
+              <% items.map((element,index)=>{ %>
+                <div class="itemDescription d-flex align-items-center" style="gap: 20px; margin: 10px 0 10px 0;" index="0">
+                  <div style="flex-grow: 8;border:1px dashed lightgray;padding: 20px;">
+                    <div class="row">
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                              <label for="itemDescription" class="form-label">Item Description</label>
+                              <input type="text" class="form-control" id="itemDescription" aria-describedby="emailHelp"
+                                name="items[<%-index  %>][itemDescription]" value="<%-element.itemDescription  %>">
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="HSNCode" class="form-label">HSNCode</label>
+                            <input type="text" class="form-control" id="HSNCode" aria-describedby="emailHelp" name="items[<%-index  %>][HSNCode]" value="<%-element.HSNCode  %>">
+                            
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                              <label for="qty" class="form-label">QTY</label>
+                              <input type="number" class="form-control" id="qty" aria-describedby="emailHelp" name="items[<%-index  %>][qty]" onkeyup="calculateTotal(event)" value="<%-element.qty  %>">
+                              
+                            </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="unit" class="form-label">Unit</label>
+                            <select name="items[<%-index  %>][unit]" class="form-control" id="unit" value="<%-element.unit  %>">
+                              <option value="box">Box</option>
+                              <option value="pcs">PCS</option>
+                            </select>
+                            
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="price" aria-describedby="emailHelp" name="items[<%-index  %>][price]" onkeyup="calculateTotal(event)" value="<%-element.price  %>">
+                            
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="total" class="form-label">Total</label>
+                            <input type="number" class="form-control" id="total" aria-describedby="emailHelp" name="items[<%-index  %>][total]" value="<%-element.total  %>">
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="flex-grow: 0;">
+                    <button type="button" class="btn btn-danger" onclick="removeItem(event)">Remove Item</button>
+                  </div>
+    
+                </div>
+
+              <% }) %>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    function calculateTotal(event){
+      let parentRow=event.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+      let currentIndex=parentRow.getAttribute('index');
+      
+      let totalInput=parentRow.querySelector(`input[name="items[${currentIndex}][total]"]`);
+      let priceInput=parentRow.querySelector(`input[name="items[${currentIndex}][price]"]`);
+      let qtyInput=parentRow.querySelector(`input[name="items[${currentIndex}][qty]"]`);
+      
+      let price=(priceInput)?Number(priceInput.value):0.00;
+      let qty=(qtyInput)?Number(qtyInput.value):0.00;
+      
+      totalInput && (totalInput.value=(price*qty));
+    } 
+
+
+    function removeItem(event){
+      let parentRow=event.target.parentElement.parentElement;
+      parentRow && parentRow.remove();
+    }
+
+    function resetError(){
+      let itemList=document.getElementById('itemList');
+
+      for(let prop of itemList.children){
+        let currentIndex=prop.getAttribute('index');
+        let itemInput=prop.querySelector(`input[name="items[${currentIndex}][itemDescription]"]`);
+        let priceInput=prop.querySelector(`input[name="items[${currentIndex}][price]"]`);
+        let qtyInput=prop.querySelector(`input[name="items[${currentIndex}][qty]"]`);
+
+        if(itemInput){
+            let span=itemInput.parentElement.querySelector('span[class="error"]');
+            span && (span.innerHTML='');
+          }
+
+          if(priceInput){
+            let span=priceInput.parentElement.querySelector('span[class="error"]');
+            span && (span.innerHTML='');
+          }
+
+          if(qtyInput){
+            let span=qtyInput.parentElement.querySelector('span[class="error"]');
+            span && (span.innerHTML='');
+          }
+      }
+    }
+
+    function validateInput(){
+      let itemList=document.getElementById('itemList');
+
+      for(let prop of itemList.children){
+        let currentIndex=prop.getAttribute('index');
+        let itemInput=prop.querySelector(`input[name="items[${currentIndex}][itemDescription]"]`);
+        let priceInput=prop.querySelector(`input[name="items[${currentIndex}][price]"]`);
+        let qtyInput=prop.querySelector(`input[name="items[${currentIndex}][qty]"]`);
+
+       
+
+        if(itemInput && (!itemInput.value || itemInput.value==='' || itemInput.value.trim().length<=0 || Number(itemInput.value)<=0 )){
+          console.log(itemInput,itemInput.querySelector('span'));
+          let span=itemInput.parentElement.querySelector('span[class="error"]');
+          span && (span.innerHTML='This field is required!');
+          return false;
+        }
+        if(priceInput && (!priceInput.value || priceInput.value==='' || priceInput.value.trim().length<=0)){
+          let span=priceInput.parentElement.querySelector('span[class="error"]');
+          span && (span.innerHTML='This field is required!');
+          return false;
+        }
+        if(qtyInput && (!qtyInput.value || qtyInput.value==='' || qtyInput.value.trim().length<=0 || Number(qtyInput.value)<=0 )){
+          let span=qtyInput.parentElement.querySelector('span[class="error"]');
+          span && (span.innerHTML='This field is required!');
+          return false;
+        }
+       
+      }
+
+      return true;
+    }
+
+    function addItem(event){
+      let itemList=document.getElementById('itemList');
+
+      resetError();
+
+      if(validateInput()){
+        let currentIndex=itemList.children.length;
+  
+        let div=document.createElement('div');
+        div.setAttribute('class','itemDescription d-flex align-items-center');
+        div.setAttribute('style','gap: 20px; margin: 10px 0 10px 0;');
+        div.setAttribute('index',itemList.children.length);
+        div.innerHTML=`
+          <div style="flex-grow: 8;border:1px dashed lightgray;padding: 20px;">
+                    <div class="row">
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                              <label for="itemDescription" class="form-label">Item Description</label>
+                              <input type="text" class="form-control" id="itemDescription" aria-describedby="emailHelp"
+                                name="items[${currentIndex}][itemDescription]">
+                                <span class="error"></span>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="HSNCode" class="form-label">HSNCode</label>
+                            <input type="text" class="form-control" id="HSNCode" aria-describedby="emailHelp" name="items[${currentIndex}][HSNCode]">
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                              <label for="qty" class="form-label">QTY</label>
+                              <input type="number" class="form-control" id="qty" aria-describedby="emailHelp" name="items[${currentIndex}][qty]" onkeyup="calculateTotal(event)">
+                              <span class="error"></span>
+                            </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="unit" class="form-label">Unit</label>
+                            <select name="items[${currentIndex}][unit]" class="form-control" id="unit">
+                              <option value="box">Box</option>
+                              <option value="pcs">PCS</option>
+                            </select>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="price" aria-describedby="emailHelp" name="items[${currentIndex}][price]" onkeyup="calculateTotal(event)">
+                            <span class="error"></span>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="mb-3">
+                            <label for="total" class="form-label">Total</label>
+                            <input type="number" class="form-control" id="total" aria-describedby="emailHelp" name="items[${currentIndex}][total]" >
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="flex-grow: 0;">
+                    <button type="button" class="btn btn-danger" onclick="removeItem(event)">Remove Item</button>
+                  </div>
+        `;
+  
+        itemList.appendChild(div);
+
+      }
+
+
+    }
+
+  </script>
+  <%- include('../layout/master-bottom') %>

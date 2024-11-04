@@ -1,0 +1,175 @@
+/*============================================
+Theme Name: Signature Builder
+Theme URI: 
+Author: OG Web Solutions
+Author URI: https://www.ogwebsolutions.com/
+Version: 1.0
+Description: 
+============================================*/
+
+/*============================================
+                    Index
+============================================
+            #    Global Style
+            #    Homepage
+                ## Header
+                ## Signature Template Slider
+                ## Create Signature Section
+
+            #    Footer
+============================================*/
+
+/*============================================
+            # Global Style
+============================================*/
+/*---------- Font Import ----------*/
+@import url('../fonts/fonts.css');
+
+/*---------- Typography ----------*/
+*{margin: 0; padding: 0; box-sizing: border-box; outline: none;}
+
+html, body{font-family: 'Aller'; font-size: 14px; font-weight: normal; line-height: 1.2; color: #002638;}
+
+.container{max-width: 1170px; margin-left: auto; margin-right: auto; padding-left: 15px; padding-right: 15px;}
+
+.main-pd{padding: 80px 0;}
+
+article, aside, figcaption, figure, footer, header, hgroup, main, nav, section{display: block;}
+
+h1, h2, h3, h4, h5, h6{margin: 0;}
+
+p{padding: 0; margin: 0; font-weight: normal;}
+
+img, img:hover, a, a:hover, :hover{text-decoration: none; outline: none; -moz-transition: all 0.3s ease 0s; -o-transition: all 0.3s ease 0s; -webkit-transition: all 0.3s ease 0s; -ms-transition: all 0.3s ease 0s; transition: all 0.3s ease 0s;}
+
+img{max-width: 100%; height: auto;}
+
+.btn{outline: none; text-align: center; vertical-align: middle; display: inline-block; text-decoration: none; font-weight: normal; padding: 12px 18px; border: 2px solid transparent;}
+
+.default-btn{color: #fff; background: #ff7354; text-transform: none; border-radius: 5px;}
+
+.btn:hover{background: transparent; outline: none;}
+
+.btn:focus, .btn:active{outline: none;}
+
+.default-btn:hover{color: #ff7354; background: #ffffff; border: 2px solid #ff7354;}
+
+:focus{outline: none;}
+
+/*============================================
+            #. Homepage
+============================================*/
+/*---------- ## Header ----------*/
+header{position: fixed; top: 0; left: 0; width: 100%; z-index: 999; background-color: rgba(255,255,255,1); background-image: linear-gradient(#fefefe 0%, #fcfcfc 100%);  box-shadow: 0px 0px 0px rgba(0,0,0,0); -moz-transition: all 0.3s ease 0s; -o-transition: all 0.3s ease 0s; -webkit-transition: all 0.3s ease 0s; -ms-transition: all 0.3s ease 0s; transition: all 0.3s ease 0s;}
+
+header.fixed-top{box-shadow: 0px 0px 20px rgba(21,21,21,0.1);}
+
+header .inner-header{padding: 25px 0px; display: -ms-flexbox; display: flex; -ms-flex-pack: justify; justify-content: space-between; -ms-flex-align: center; align-items: center; border-bottom: 1px solid rgba(0,38,56,0.1);}
+
+header.fixed-top .inner-header{border-bottom: 1px solid transparent;}
+
+header nav .navigation{list-style-type: none; display: -ms-flexbox; display: flex; -ms-flex-align: center; align-items: center;}
+
+header nav ul li:not(:first-child){padding-left: 28px;}
+
+header nav ul li a{font-size: 18px; color: #002638;}
+
+header nav ul li a:hover{color: #ff7354;}
+
+
+/*---------- ## Signature Template Slider ----------*/
+.content-wrapper{padding-top: 104px;}
+
+.signature-template{background-color: rgba(255,255,255,1); background-image: linear-gradient(#fcfcfc 0%, #f4f5f8 100%);}
+
+.choose-signature-template{padding: 55px 0 60px;}
+
+.sub-header{padding-bottom: 25px;}
+
+.sub-header.center{text-align: center;}
+
+.sub-header h2{font-size: 30px; color: #002638;}
+
+
+/*---------- ## Create Signature Section ----------*/
+.create-signature{padding-top: 60px; padding-bottom: 60px;}
+
+.create-signature .container{display: -ms-flexbox; display: flex; width: 100%;}
+
+.create-signature .left{padding-right:15px; width: 25%;}
+
+.create-signature .right{padding-left:15px; width: 75%;}
+
+#accordion {box-shadow: 0px 0px 10px 5px rgb(21,21,21,0.1); border-radius: 10px 10px 0 0;}
+
+#accordion .accordion-head{background-color: #27546a; padding: 15px 20px; width: 100%; color: #ffffff; font-weight: normal; cursor: pointer;}
+
+#accordion .accordion-head:not(:last-child){border-bottom: 1px solid rgba(255,255,255,0.1);}
+
+#accordion .accordion-head{position: relative;}
+
+#accordion .accordion-head::after{content:''; position: absolute; right: 20px; top:20px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top:5px solid #fff;}
+
+#accordion .accordion-head.caret-sign::after{content:''; position: absolute; right: 20px; top:20px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom:5px solid #fff; border-top: none;}
+
+#accordion .top-border-radius{border-radius: 10px 10px 0 0;}
+
+#accordion .bottom-border-radius{border-radius: 0 0 10px 10px;}
+
+#accordion .bottom-border-radius.caret-sign{border-radius: 0;}
+
+#accordion .accordion-body{padding: 20px; background-color: #f3f5f7;}
+
+#accordion .accordion-body .form-group{width: 100%;}
+
+#accordion .accordion-body form .form-group:not(:last-of-type){padding-bottom: 15px;}
+
+#accordion .accordion-body .form-control{width: 100%; border-radius: 5px; border: 1px solid #e8eef4; padding: 10px 15px; font-size:15px;}
+
+#accordion .accordion-body .form-control::placeholder{color: #9eadbb; opacity: 1;}
+
+#accordion .accordion-body{display: none; transition: all 3s;}
+
+#accordion .accordion-body.d-block{display: block; transition: all 3s;}
+
+.accordion-body .social-links img{width: 40px; height: 40px; margin-bottom: 5px;}
+
+.create-signature .right .inner-signature-output{border-radius: 10px; box-shadow: 0px 0px 10px 5px rgba(21,21,21,0.1); margin-bottom: 30px;}
+
+.create-signature .right .inner-signature-output .three-dot{background-color: #28546b; padding: 16px; border-radius: 10px 10px 0 0; border-bottom: 1px solid rgba(255,255,255,0.1);}
+
+.create-signature .right .inner-signature-output .three-dot span{width: 9px; height: 9px; border-radius: 100%; display: inline-block; margin-right: 8px;}
+
+span.red{background-color: #d85443; }
+
+span.orange{background-color: #f3a637;}
+
+span.green{background-color: #94d12d;}
+
+.inner-signature-output .signature-subject{padding: 16px; background-color: #28546b; color: #ffffff; font-size: 14px;}
+
+.inner-signature-output .signature-subject .dark{color: rgba(255,255,255,0.75);}
+
+.inner-signature-output .signature-subject p.top{padding-bottom: 14px;}
+
+.inner-signature-output .signature-body{padding: 60px 80px; display: -ms-flexbox; display: flex; -ms-flex-pack: center; justify-content: center; -ms-flex-align: center; align-items: center;}
+
+.signature-output .button-group{display: -ms-flexbox; display: flex; -ms-flex-pack: center; justify-content: center; -ms-flex-direction: column; flex-direction: column; -ms-flex-align: center; align-items: center;}
+
+.signature-output .button-group .btn{margin-bottom: 15px;}
+
+.signature-output .button-group .clear-fields{color:#002638; position: relative; padding-left: 25px;}
+
+.signature-output .button-group .clear-fields .spinner{width: 18px; height: 18px; background-image: url(../img/spinner-icon.png); background-repeat: no-repeat; background-position: center center; background-size: 16px 18px; position: absolute; left: 0px; top: 0;}
+
+/*============================================
+            #. Footer
+============================================*/
+footer{padding:15px 0; background-color: rgba(255,255,255,1); background-image: linear-gradient(#f4f5f8 0%, #fcfcfc 100%);}
+
+footer .copyright{text-align: center;}
+
+input[type=color] {
+    height: 32px;
+    padding: 0 !important;
+}

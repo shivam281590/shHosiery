@@ -1,0 +1,69 @@
+<%- include('../layout/master-top') %>
+<form id="downloadInvoicePDF" action="/admin<%-adminRoutes.downloadInvoicePDF.replace(':invoiceId',invoiceId) %>" method="POST">
+    <input type="hidden" name="_csrf" value="<%-csrfToken  %>">
+</form>
+<div class="d-flex justify-content-end m-2 gap-2">
+  <a href="/admin<%- adminRoutes.invoiceList %>" class="btn btn-primary">Back</a>
+  <button class="btn btn-primary" onclick="printPDF()">Print</button>
+  <a href="javascript::void(0)" onclick="document.getElementById('downloadInvoicePDF').submit()" class="btn btn-primary" >Download</a>
+</div>
+<div class="card">
+  <div class="card-body">
+    <style>
+      .error {
+        color: red;
+      }
+    </style>
+    <h5 class="card-title fw-semibold mb-4">Invoice PDF</h5>
+    <canvas id="pdf-canvas"></canvas>
+
+    
+    <script>
+      const url = "<%- url %>";  // Path to your PDF
+      let pdfDoc = null,
+          pageNum = 1,
+          canvas = document.getElementById('pdf-canvas'),
+          ctx = canvas.getContext('2d');
+
+      // Load PDF
+      pdfjsLib.getDocument(url).promise.then(doc => {
+        pdfDoc = doc;
+        renderPage(pageNum);
+      }).catch(err => {
+        console.error('Error loading PDF: ', err);
+      });
+
+      // Render the page
+      function renderPage(num) {
+        pdfDoc.getPage(num).then(page => {
+          const viewport = page.getViewport({ scale: 1.5 });
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport,
+          };
+          page.render(renderContext);
+        }).catch(err => {
+          console.error('Error rendering page: ', err);
+        });
+      }
+
+      // Print PDF
+      function printPDF() {
+        const win = window.open(url, '_blank');
+        if (win) {
+          win.onload = function () {
+            win.print();
+          };
+        } else {
+          alert('Please allow popups for this website');
+        }
+      }
+    </script>
+
+  </div>
+</div>
+
+<%- include('../layout/master-bottom') %>

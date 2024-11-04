@@ -1,0 +1,11 @@
+exports.adminRoutes={
+    getLogin:'/login',
+    postLogin:'/login',
+    logout:'/logout',
+    invoiceList:'/invoices',
+    createInvoice:'/invoices/create',
+    editInvoice:'/invoices/:invoiceId/edit',
+    deleteInvoice:'/invoies/:invoiceId/delete',
+    downloadInvoicePDF:'/invoices/:invoiceId/pdf/download',
+    pdfViewer:'/invoices/:invoiceId/pdf/viewer',
+}

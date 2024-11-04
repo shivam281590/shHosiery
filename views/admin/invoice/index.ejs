@@ -1,0 +1,88 @@
+<%- include('../layout/master-top') %>
+<div class="d-flex justify-content-end m-2">
+    <a href="/admin<%-adminRoutes.createInvoice %>" target="_blank" class="btn btn-primary">Create Invoice</a>
+</div>
+<div class="card w-100">
+    <div class="card-body p-4">
+      <h5 class="card-title fw-semibold mb-4">Invoices</h5>
+      <div class="table-responsive">
+        <table class="table text-nowrap mb-0 align-middle">
+          <thead class="text-dark fs-4">
+            <tr>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">S.No</h6>
+              </th>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Shop Name</h6>
+              </th>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">GST</h6>
+              </th>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Type</h6>
+              </th>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Total</h6>
+              </th>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Action</h6>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% allInvoice.forEach((row,index)=>{ %>
+              <tr>
+                <td class="border-bottom-0">
+                  <h6 class="fw-semibold mb-0"><%-(index+1)  %></h6>
+                </td>
+                <td class="border-bottom-0">
+                    <h6 class="fw-semibold mb-1"><%-(row.shopName)  %></h6>
+                    <span class="fw-normal"><%-row.name  %></span>                          
+                </td>
+                <td class="border-bottom-0">
+                  <p class="mb-0 fw-normal"><%-row.gst  %></p>
+                </td>
+                <td class="border-bottom-0">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary rounded-3 fw-semibold"><%-(row.cType)  %></span>
+                  </div>
+                </td>
+                <td class="border-bottom-0">
+                  <h6 class="fw-semibold mb-0 fs-4">₹<%-(row.total)  %></h6>
+                </td>
+                <td class="border-bottom-0">
+                  <div class="d-flex align-items-center gap-2">
+                    <form action="/admin<%-adminRoutes.deleteInvoice.replace(':invoiceId',row.id) %>" method="POST">
+                      <input type="hidden" name="_csrf" value="<%-csrfToken %>">
+                    </form>
+                    <a href="/admin<%-adminRoutes.editInvoice.replace(':invoiceId',row.id) %>" class="badge bg-primary rounded-3 fw-semibold " style="cursor: pointer;color: #fff;"><i class="ti ti-edit"></i></a>
+                    <a href="/admin<%-adminRoutes.pdfViewer.replace(':invoiceId',row.id) %>" class="badge bg-secondary rounded-3 fw-semibold " style="cursor: pointer;color: #fff;"><i class="ti ti-eye"></i></a>
+                    <a href="javascript::void(0)" onclick="submitDeleteForm(event)" class="badge bg-danger rounded-3 fw-semibold " style="cursor: pointer;color: #fff;"><i class="ti ti-trash"></i></a>
+                  </div>
+                  <!-- <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-danger rounded-3 fw-semibold ti ti-trash"></span>
+                  </div> -->
+                </td>
+              </tr> 
+
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+    <div class="card-body p-4 d-flex justify-content-end">
+      <div>
+        <% for(let i=1;(i<=pages) && (pages>1);i++){ %>
+          <a class="<%-(currentPage===i)?'btn btn-primary m-1':'btn btn-outline-primary' %>" href="/admin<%-adminRoutes.invoiceList %>?page=<%-i  %>"><%-i %></a>
+        <% } %>
+      </div>
+  </div>
+  <script>
+    function submitDeleteForm(event){
+      if(confirm('are you sure?')){
+        event.currentTarget.parentElement.querySelector('form').submit();
+      }
+    }
+  </script>
+<%- include('../layout/master-bottom') %>

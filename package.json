@@ -1,0 +1,49 @@
+{
+  "name": "shHosiery",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "secret:cookie": "node ./utilites/generateSecretString.js",
+    "dev": "npm run development",
+    "development": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "mix --production",
+    "storage:link":"node createSymlink.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.4",
+    "crypto-js": "^4.2.0",
+    "csrf": "^3.1.0",
+    "csrf-csrf": "^3.0.6",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.18.0",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "mysql2": "^3.11.0",
+    "puppeteer": "^23.6.1",
+    "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2",
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.4.38",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "laravel-mix": "^6.0.49",
+    "postcss-import": "^16.1.0",
+    "sass": "^1.77.8",
+    "sass-loader": "^16.0.1",
+    "vue": "^3.4.38",
+    "vue-loader": "^17.3.1"
+  }
+}
