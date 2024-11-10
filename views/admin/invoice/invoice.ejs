@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f7f7f7;
         }
         .invoice-container {
-            width: 80%;
-            max-width: 800px;
-            margin: 20px auto;
+            width: 100%;
+            /* max-width: 800px; */
+            /* margin: 20px auto; */
             background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            /* border-radius: 10px; */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
         }
         .header {
             display: flex;
@@ -27,7 +28,7 @@
             margin-bottom: 20px;
         }
         .header img {
-            max-height: 50px;
+            max-height: 180px;
         }
         .invoice-details{
             display: flex;
@@ -35,7 +36,8 @@
             align-items: center;
             & .billedTo{
                 text-align: right;
-                width: 200px;
+                word-break: break-all
+                /* width: 200px; */
             }
         }
         .header div {
@@ -83,30 +85,70 @@
     </style>
 </head>
 <body>
-
-    <div class="invoice-container">
+    <div class="invoice-container" style="margin: 0 0 80px 0;">
         <div class="header">
             <div>
-                <h2>SHIVAM HOSIERY</h2>
+                <img src="http://shivamhosiery.com/SH.png" alt="" style="width:180px;">
+                <!-- <h2>SHIVAM HOSIERY</h2> -->
             </div>
-            <div style="width: 200px;">
-                <p><strong>From:</strong></p>
-                <p>Shivam Hosiery</p>
-                <p >Sadarganj,Sahiktra(Oppsite of Pawan Takies), Mariahu, Jaunpur, Uttar Pradesh, India 222161</p>
-                <p>+919918300361</p>
+            <div style="max-width: 250px;">
+                <p><strong>FROM:</strong></p>
+                <p><%- config.shopName %></p>
+                <p><%- config.shopAddress %></p>
+                <p>
+                    <p style="margin:0">
+                        Mob: <%- config.shopMobile %>
+                    </p>
+                    <p style="margin:0">
+                        GSTIN: <%- config.shopGST %>
+                    </p>
+                </p>
             </div>
         </div>
 
         <div class="invoice-details">
             <div>
-                <p><strong>Invoice No:</strong> 123</p>
-                <p><strong>Date:</strong> January 16, 2023</p>
+                <p><strong>Invoice No:</strong> <%- invoiceId %></p>
+                <p><strong>Date:</strong> <%- createdAt %></p>
             </div>
             <div class="billedTo">
                 <p><strong>BILLED TO:</strong></p>
-                <p>Estelle Darcy</p>
-                <p>123 Anywhere St., Any City</p>
-                <p>+123-456-7890</p>
+                <% if (toShopName && toShopName.length > 0) { %>
+                    <p><%- toShopName %></p>
+                <% } else if (toName && toName.length > 0) { %>
+                    <p><%- toName %></p>
+                <% } else { %>
+                    <p>New</p>
+                <% } %>
+
+                <% if (toAddress && toAddress.length > 0) { %>
+                    <p>
+                        <p style="margin:0;"><%- toAddress %></p>
+                        <p style="margin:0;">
+                            <% if (toCity && toCity.length > 0) { %><%- toCity %> <% } %>
+                        <% if (toState && toState.length > 0) { %><%- toState %> <% } %>
+                        <% if (toCountry && toCountry.length > 0) { %><%- toCountry %> <% } %>
+                        <% if (toPinCode && Number(toPinCode)!=0 &&  toPinCode.length > 0) { %><%- toPinCode %><% } %>
+                        </p>
+                    </p>
+                <% } %>
+
+                <!-- <p>
+                    
+                </p> -->
+                <p>
+                    <% if (toGST && toGST.length > 0) { %>
+                        <p style="margin:0;">GSTIN: <%- toGST %></p>
+                    <% } %>
+    
+                    <% if (toMobile && toMobile.length > 0) { %>
+                        <p style="margin:0;">Mob: <%- toMobile %></p>
+                    <% } %>
+    
+                    <% if (toEmail && toEmail.length > 0) { %>
+                        <p style="margin:0;">Email: <%- toEmail %></p>
+                    <% } %>
+                </p>
             </div>
         </div>
 
@@ -123,54 +165,54 @@
                 </tr>
             </thead>
             <tbody>
-                <% items.map((element,index)=>{  %>
+                <% items.map((element, index) => { %>
                     <tr>
-                        <td><%-(index+1)  %></td>
-                        <td><%-element.itemDescription %></td>
-                        <td><%-element.HSNCode %></td>
-                        <td><%-element.qty  %></td>
-                        <td><%-element.unit  %></td>
-                        <td><%-element.price  %></td>
-                        <td><%-element.total  %></td>
+                        <td><%- index + 1 %></td>
+                        <td style="word-break: break-all;max-width: 200px;"><%- element.itemDescription %></td>
+                        <td><%- element.HSNCode %></td>
+                        <td><%- element.qty %></td>
+                        <td><%- element.unit %></td>
+                        <td><%- element.price %></td>
+                        <td><%- Number(element.total).toFixed(2) %></td>
                     </tr>
                 <% }) %>
             </tbody>
             <tfoot>
                 <tr class="total-row">
                     <td class="footer-row" colspan="6">SUB TOTAL AMOUNT :</td>
-                    <td>₹<%-subTotal  %></td>
+                    <td>₹<%- Number(subTotal).toFixed(2) %></td>
                 </tr>
                 <tr class="total-row">
-                    <td class="footer-row" colspan="6">SGST :</td>
-                    <td>₹<%-sgst  %></td>
+                    <td class="footer-row" colspan="6">SGST(+<%-config['tax.sgst']%>) :</td>
+                    <td>₹<%- Number(sgst).toFixed(2) %></td>
                 </tr>
                 <tr class="total-row">
-                    <td class="footer-row" colspan="6">CGST :</td>
-                    <td>₹<%-cgst  %></td>
+                    <td class="footer-row" colspan="6">CGST(+<%-config['tax.cgst']%>) :</td>
+                    <td>₹<%- Number(cgst).toFixed(2)%></td>
                 </tr>
                 <tr class="total-row">
-                    <td class="footer-row" colspan="6">Discount :</td>
-                    <td>₹<%-discount  %></td>
+                    <td class="footer-row" colspan="6">Discount(-<%-config['discount']%>) :</td>
+                    <td>₹<%- Number(discount).toFixed(2) %></td>
                 </tr>
                 <tr class="total-row">
                     <td class="footer-row" colspan="6">TOTAL AMOUNT :</td>
-                    <td>₹<%-total  %></td>
+                    <td>₹<%- Number(total).toFixed(2) %></td>
                 </tr>
             </tfoot>
         </table>
 
         <div class="payment-info">
             <p><strong>Please make payments to:</strong></p>
-            <p>Shivam Hosiery</p>
-            <p>Bank Name: Fauget</p>
-            <p>Account No.: 1234-5678-90</p>
+            <p><%- config.shopName %></p>
+            <p>Bank Name: <%- config.bankName %></p>
+            <p>Account No.: <%- config.accountNo %></p>
+            <p>IFSC Code.: <%- config.ifscCode %></p>
         </div>
 
         <div class="footer">
-            <p>Shivam Hosiery</p>
-            <p>Sadarganj,Sahiktra(Oppsite of Pawan Takies), Mariahu, Jaunpur, Uttar Pradesh, India 222161</p>
+            <p><%- config.shopName %></p>
+            <p><%- config.shopAddress %></p>
         </div>
     </div>
-
 </body>
 </html>

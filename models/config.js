@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Config.init({
     key: DataTypes.STRING,
-    value: DataTypes.TEXT
+    value: DataTypes.TEXT,
+    fieldType:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Config',

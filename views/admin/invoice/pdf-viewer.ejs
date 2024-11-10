@@ -5,7 +5,7 @@
 <div class="d-flex justify-content-end m-2 gap-2">
   <a href="/admin<%- adminRoutes.invoiceList %>" class="btn btn-primary">Back</a>
   <button class="btn btn-primary" onclick="printPDF()">Print</button>
-  <a href="javascript::void(0)" onclick="document.getElementById('downloadInvoicePDF').submit()" class="btn btn-primary" >Download</a>
+  <a href="javascript:void(0)" onclick="document.getElementById('downloadInvoicePDF').submit()" class="btn btn-primary" >Download</a>
 </div>
 <div class="card">
   <div class="card-body">
@@ -15,19 +15,25 @@
       }
     </style>
     <h5 class="card-title fw-semibold mb-4">Invoice PDF</h5>
+    <div class="d-flex justify-content-between mb-3">
+      <button id="prev-page" class="btn btn-secondary" onclick="prevPage()">Previous</button>
+      <span>Page: <span id="page-num">1</span> / <span id="page-count">1</span></span>
+      <button id="next-page" class="btn btn-secondary" onclick="nextPage()">Next</button>
+    </div>
     <canvas id="pdf-canvas"></canvas>
 
-    
     <script>
       const url = "<%- url %>";  // Path to your PDF
       let pdfDoc = null,
           pageNum = 1,
+          pageRendering = false,
           canvas = document.getElementById('pdf-canvas'),
           ctx = canvas.getContext('2d');
 
       // Load PDF
       pdfjsLib.getDocument(url).promise.then(doc => {
         pdfDoc = doc;
+        document.getElementById('page-count').textContent = pdfDoc.numPages;
         renderPage(pageNum);
       }).catch(err => {
         console.error('Error loading PDF: ', err);
@@ -35,6 +41,7 @@
 
       // Render the page
       function renderPage(num) {
+        pageRendering = true;
         pdfDoc.getPage(num).then(page => {
           const viewport = page.getViewport({ scale: 1.5 });
           canvas.height = viewport.height;
@@ -44,10 +51,27 @@
             canvasContext: ctx,
             viewport: viewport,
           };
-          page.render(renderContext);
+          page.render(renderContext).promise.then(() => {
+            pageRendering = false;
+            document.getElementById('page-num').textContent = num;
+          });
         }).catch(err => {
           console.error('Error rendering page: ', err);
         });
+      }
+
+      // Previous page
+      function prevPage() {
+        if (pageNum <= 1 || pageRendering) return;
+        pageNum--;
+        renderPage(pageNum);
+      }
+
+      // Next page
+      function nextPage() {
+        if (pageNum >= pdfDoc.numPages || pageRendering) return;
+        pageNum++;
+        renderPage(pageNum);
       }
 
       // Print PDF
@@ -62,7 +86,6 @@
         }
       }
     </script>
-
   </div>
 </div>
 

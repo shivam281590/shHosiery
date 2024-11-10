@@ -16,15 +16,6 @@
                 <h6 class="fw-semibold mb-0">Shop Name</h6>
               </th>
               <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">GST</h6>
-              </th>
-              <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Type</h6>
-              </th>
-              <th class="border-bottom-0">
-                <h6 class="fw-semibold mb-0">Total</h6>
-              </th>
-              <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Action</h6>
               </th>
             </tr>
@@ -36,28 +27,22 @@
                   <h6 class="fw-semibold mb-0"><%-(index+1)  %></h6>
                 </td>
                 <td class="border-bottom-0">
-                    <h6 class="fw-semibold mb-1"><%-(row.shopName)  %></h6>
+                  <% if(row.shopName && row.shopName.length>0) {%>
+                    <a href="/admin<%-adminRoutes.pdfViewer.replace(':invoiceId',row.id) %>" class="fw-semibold mb-1" ><%-(row.shopName)  %></a>
                     <span class="fw-normal"><%-row.name  %></span>                          
-                </td>
-                <td class="border-bottom-0">
-                  <p class="mb-0 fw-normal"><%-row.gst  %></p>
-                </td>
-                <td class="border-bottom-0">
-                  <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-primary rounded-3 fw-semibold"><%-(row.cType)  %></span>
-                  </div>
-                </td>
-                <td class="border-bottom-0">
-                  <h6 class="fw-semibold mb-0 fs-4">₹<%-(row.total)  %></h6>
+                  <% }else{ %>
+                    <a href="/admin<%-adminRoutes.pdfViewer.replace(':invoiceId',row.id) %>" class="fw-semibold mb-1">Unknown</a>
+                    <span class="fw-normal"><%-(row.mobile)  %></span>
+                  <% } %>                          
                 </td>
                 <td class="border-bottom-0">
                   <div class="d-flex align-items-center gap-2">
                     <form action="/admin<%-adminRoutes.deleteInvoice.replace(':invoiceId',row.id) %>" method="POST">
                       <input type="hidden" name="_csrf" value="<%-csrfToken %>">
                     </form>
-                    <a href="/admin<%-adminRoutes.editInvoice.replace(':invoiceId',row.id) %>" class="badge bg-primary rounded-3 fw-semibold " style="cursor: pointer;color: #fff;"><i class="ti ti-edit"></i></a>
-                    <a href="/admin<%-adminRoutes.pdfViewer.replace(':invoiceId',row.id) %>" class="badge bg-secondary rounded-3 fw-semibold " style="cursor: pointer;color: #fff;"><i class="ti ti-eye"></i></a>
-                    <a href="javascript::void(0)" onclick="submitDeleteForm(event)" class="badge bg-danger rounded-3 fw-semibold " style="cursor: pointer;color: #fff;"><i class="ti ti-trash"></i></a>
+                    <a title="Edit" href="/admin<%-adminRoutes.editInvoice.replace(':invoiceId',row.id) %>" class="badge bg-primary rounded-3 fw-semibold " style="cursor: pointer;color: #fff;margin:5px"><i class="ti ti-edit"></i></a>
+                    <a title="View" href="/admin<%-adminRoutes.pdfViewer.replace(':invoiceId',row.id) %>" class="badge bg-secondary rounded-3 fw-semibold " style="cursor: pointer;color: #fff;margin:5px"><i class="ti ti-eye"></i></a>
+                    <a title="Delete" href="javascript::void(0)" onclick="submitDeleteForm(event)" class="badge bg-danger rounded-3 fw-semibold " style="cursor: pointer;color: #fff;margin:5px"><i class="ti ti-trash"></i></a>
                   </div>
                   <!-- <div class="d-flex align-items-center gap-2">
                     <span class="badge bg-danger rounded-3 fw-semibold ti ti-trash"></span>

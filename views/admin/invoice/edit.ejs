@@ -18,8 +18,8 @@
               <div class="mb-3">
                 <label for="cType" class="form-label">Customer Type</label>
                 <select name="cType" class="form-control" id="cType" value="<%-cType  %>">
-                  <option value="fixed">FIXED</option>
-                  <option value="cash">CASH</option>
+                  <option value="FIXED">FIXED</option>
+                  <option value="CASH">CASH</option>
                 </select>
                 <% if (cTypeError) { %>
                   <span class="error-shopName"><%- cTypeError %></span>
@@ -29,7 +29,7 @@
               <div class="mb-3">
                 <label for="customerId" class="form-label">Existing Customer</label>
                 <select class="form-control" name="customerId" id="customerId" value="<%-customerId  %>">
-                  <option>Select Customer</option>
+                  <option value="0">Select Customer</option>
                   <% allCustomers && allCustomers.forEach(cust=>{ %>
                     <option value="<%-cust.id %>"><%-cust.shopName %><%-(cust.name?`(${cust.name})`:'') %></option>
                     <% }) %>
@@ -38,7 +38,7 @@
   
               <div class="mb-3">
                 <label for="shopName" class="form-label">Shop Name</label>
-                <input type="text" class="form-control" id="shopName" aria-describedby="emailHelp" name="shopName" value="<%-shopName  %>">
+                <input type="text" class="form-control" id="shopName" aria-describedby="emailHelp" name="shopName" value="<%-shopName  %>" onkeyup="captalize(event)">
                 <% if (shopNameError) { %>
                   <span class="error-shopName"><%- shopNameError %></span>
                   <% } %>
@@ -46,7 +46,7 @@
   
               <div class="mb-3">
                 <label for="gst" class="form-label">GST</label>
-                <input type="text" class="form-control" id="gst" aria-describedby="emailHelp" name="gst" value="<%-gst  %>">
+                <input type="text" class="form-control" id="gst" aria-describedby="emailHelp" name="gst" value="<%-gst  %>" onkeyup="convertToUpperCase(event)">
                 <% if (gstError) { %>
                   <span class="error-shopName"><%- gstError %></span>
                   <% } %>
@@ -70,7 +70,7 @@
   
               <div class="mb-3">
                 <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address" aria-describedby="emailHelp" name="address" value="<%-address  %>">
+                <input type="text" class="form-control" id="address" aria-describedby="emailHelp" name="address" value="<%-address  %>" onkeyup="captalize(event)">
                 <% if (addressError) { %>
                   <span class="error-shopName"><%- addressError %></span>
                   <% } %>
@@ -78,7 +78,7 @@
   
               <div class="mb-3">
                 <label for="city" class="form-label">City</label>
-                <input type="text" class="form-control" id="city" aria-describedby="emailHelp" name="city" value="<%-city %>">
+                <input type="text" class="form-control" id="city" aria-describedby="emailHelp" name="city" value="<%-city %>" onkeyup="captalize(event)">
                 <% if (cityError) { %>
                   <span class="error-shopName"><%- cityError %></span>
                   <% } %>
@@ -86,7 +86,45 @@
   
               <div class="mb-3">
                 <label for="state" class="form-label">State</label>
-                <input type="text" class="form-control" id="state" aria-describedby="emailHelp" name="state" value="<%-state %>">
+                <select name="state" id="state"  class="form-control">
+                  <option value="">Select State</option>
+                  <option value="Andhra Pradesh">Andhra Pradesh</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Assam">Assam</option>
+                  <option value="Bihar">Bihar</option>
+                  <option value="Chhattisgarh">Chhattisgarh</option>
+                  <option value="Goa">Goa</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Himachal Pradesh">Himachal Pradesh</option>
+                  <option value="Jharkhand">Jharkhand</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Kerala">Kerala</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Odisha">Odisha</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="Sikkim">Sikkim</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Telangana">Telangana</option>
+                  <option value="Tripura">Tripura</option>
+                  <option selected value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Uttarakhand">Uttarakhand</option>
+                  <option value="West Bengal">West Bengal</option>
+                  <option value="Andaman and Nicobar">Andaman and Nicobar Islands</option>
+                  <option value="Chandigarh">Chandigarh</option>
+                  <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli and Daman and Diu</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                  <option value="Ladakh">Ladakh</option>
+                  <option value="Lakshadweep">Lakshadweep</option>
+                  <option value="Puducherry">Puducherry</option>
+              </select>
                 <% if (stateError) { %>
                   <span class="error-shopName"><%- stateError %></span>
                   <% } %>
@@ -94,7 +132,7 @@
   
               <div class="mb-3">
                 <label for="country" class="form-label">Country</label>
-                <input type="text" class="form-control" id="country" aria-describedby="emailHelp" name="country" value="<%-country  %>">
+                <input type="text" class="form-control" id="country" aria-describedby="emailHelp" name="country" value="<%-country??'India'  %>">
                 <% if (countryError) { %>
                   <span class="error-shopName"><%- countryError %></span>
                   <% } %>
@@ -102,7 +140,7 @@
   
               <div class="mb-3">
                 <label for="pinCode" class="form-label">Pin Code</label>
-                <input type="number" class="form-control" id="pinCode" aria-describedby="emailHelp" name="pinCode" value="<%-pinCode  %>">
+                <input type="number" class="form-control" id="pinCode" aria-describedby="emailHelp" name="pinCode" value="<%-pinCode??0  %>">
                 <% if (pinCodeError) { %>
                   <span class="error-shopName"><%- pinCodeError %></span>
                   <% } %>
@@ -116,24 +154,24 @@
           <div class="card-body mt-2">
             <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
               <h6 class="card-title fw-semibold m-0 p-0">Item Description</h6>
-              <button type="button" class="btn btn-primary" onclick="addItem(event)">Add Item</button>
+              <!-- <button type="button" class="btn btn-primary" onclick="addItem(event)">Add Item</button> -->
             </div>
             <div id="itemList">
               <% items.map((element,index)=>{ %>
-                <div class="itemDescription d-flex align-items-center" style="gap: 20px; margin: 10px 0 10px 0;" index="0">
-                  <div style="flex-grow: 8;border:1px dashed lightgray;padding: 20px;">
+                <div class="itemDescription d-flex align-items-center" style="gap: 20px; margin: 10px 0 10px 0;flex-direction: column;" index="0">
+                  <div style="border:1px dashed lightgray;padding: 20px;width:100%">
                     <div class="row">
                       <div class="col-md-6">
                           <div class="mb-3">
                               <label for="itemDescription" class="form-label">Item Description</label>
                               <input type="text" class="form-control" id="itemDescription" aria-describedby="emailHelp"
-                                name="items[<%-index  %>][itemDescription]" value="<%-element.itemDescription  %>">
+                                name="items[<%-index  %>][itemDescription]" value="<%-element.itemDescription  %>" onkeyup="convertToUpperCase(event)">
                           </div>
                       </div>
                       <div class="col-md-6">
                           <div class="mb-3">
                             <label for="HSNCode" class="form-label">HSNCode</label>
-                            <input type="text" class="form-control" id="HSNCode" aria-describedby="emailHelp" name="items[<%-index  %>][HSNCode]" value="<%-element.HSNCode  %>">
+                            <input type="text" class="form-control" id="HSNCode" aria-describedby="emailHelp" name="items[<%-index  %>][HSNCode]" value="<%-element.HSNCode  %>" onkeyup="convertToUpperCase(event)">
                             
                           </div>
                       </div>
@@ -150,8 +188,8 @@
                           <div class="mb-3">
                             <label for="unit" class="form-label">Unit</label>
                             <select name="items[<%-index  %>][unit]" class="form-control" id="unit" value="<%-element.unit  %>">
-                              <option value="box">Box</option>
-                              <option value="pcs">PCS</option>
+                              <option value="BOX">Box</option>
+                              <option value="PCS">PCS</option>
                             </select>
                             
                           </div>
@@ -173,7 +211,7 @@
                       </div>
                     </div>
                   </div>
-                  <div style="flex-grow: 0;">
+                  <div >
                     <button type="button" class="btn btn-danger" onclick="removeItem(event)">Remove Item</button>
                   </div>
     
@@ -184,11 +222,29 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div style="display: flex;justify-content: space-between;align-items: center;">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-primary" onclick="addItem(event)">Add Item</button>
+        </div>
       </form>
     </div>
   </div>
   <script>
+
+function captalize(event){
+      if(event && event.target.value){
+        let actualValue=event.target.value;
+        let conversionText=event.target.value.trim().charAt(0).toUpperCase();
+        event.target.value=conversionText+actualValue.slice(1,event.target.value.length);
+      }
+      // event && (event.target.value.trim().charAt(0).toUpperCase())
+    }
+
+    function convertToUpperCase(event){
+      let conversionText=event.target.value.toUpperCase();
+      event.target.value=conversionText;
+    }
+
     function calculateTotal(event){
       let parentRow=event.target.parentElement.parentElement.parentElement.parentElement.parentElement;
       let currentIndex=parentRow.getAttribute('index');
@@ -278,23 +334,23 @@
   
         let div=document.createElement('div');
         div.setAttribute('class','itemDescription d-flex align-items-center');
-        div.setAttribute('style','gap: 20px; margin: 10px 0 10px 0;');
+        div.setAttribute('style','gap: 20px; margin: 10px 0 10px 0;flex-direction:column');
         div.setAttribute('index',itemList.children.length);
         div.innerHTML=`
-          <div style="flex-grow: 8;border:1px dashed lightgray;padding: 20px;">
+          <div style="border:1px dashed lightgray;padding: 20px;width:100%">
                     <div class="row">
                       <div class="col-md-6">
                           <div class="mb-3">
                               <label for="itemDescription" class="form-label">Item Description</label>
                               <input type="text" class="form-control" id="itemDescription" aria-describedby="emailHelp"
-                                name="items[${currentIndex}][itemDescription]">
+                                name="items[${currentIndex}][itemDescription]" onkeyup="convertToUpperCase(event)">
                                 <span class="error"></span>
                           </div>
                       </div>
                       <div class="col-md-6">
                           <div class="mb-3">
-                            <label for="HSNCode" class="form-label">HSNCode</label>
-                            <input type="text" class="form-control" id="HSNCode" aria-describedby="emailHelp" name="items[${currentIndex}][HSNCode]">
+                            <label for="HSNCode" class="form-label" >HSNCode</label>
+                            <input type="text" class="form-control" id="HSNCode" aria-describedby="emailHelp" name="items[${currentIndex}][HSNCode]" onkeyup="convertToUpperCase(event)">
                           </div>
                       </div>
                     </div>
@@ -310,8 +366,8 @@
                           <div class="mb-3">
                             <label for="unit" class="form-label">Unit</label>
                             <select name="items[${currentIndex}][unit]" class="form-control" id="unit">
-                              <option value="box">Box</option>
-                              <option value="pcs">PCS</option>
+                              <option value="BOX">Box</option>
+                              <option value="PCS">PCS</option>
                             </select>
                           </div>
                       </div>
@@ -332,7 +388,7 @@
                       </div>
                     </div>
                   </div>
-                  <div style="flex-grow: 0;">
+                  <div style="">
                     <button type="button" class="btn btn-danger" onclick="removeItem(event)">Remove Item</button>
                   </div>
         `;

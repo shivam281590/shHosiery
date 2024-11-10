@@ -12,7 +12,7 @@
     "hot": "mix watch --hot",
     "prod": "npm run production",
     "production": "mix --production",
-    "storage:link":"node createSymlink.js"
+    "storage:link": "node createSymlink.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -30,7 +30,7 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "mysql2": "^3.11.0",
-    "puppeteer": "^23.6.1",
+    "puppeteer": "^23.7.0",
     "sequelize": "^6.37.3",
     "sequelize-cli": "^6.6.2",
     "validator": "^13.12.0"

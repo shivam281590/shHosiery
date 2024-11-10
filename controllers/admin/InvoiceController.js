@@ -6,6 +6,7 @@ const path=require('path');
 const {getRootDir}=require('../../utilities/helper');
 
 
+
 class InvoiceController{
     constructor(){
 
@@ -143,6 +144,15 @@ class InvoiceController{
             /**
              * Generate PDF
              */
+            let conf={};
+            let allConfig=await Config.findAll();
+            allConfig.forEach(element => {
+                conf[element.key]=element.value;
+            });
+
+            let inDate=new Date(invoice.createdAt);
+
+            
             res.render(
                 'admin/invoice/invoice',
                 {
@@ -151,7 +161,21 @@ class InvoiceController{
                     sgst: invoice.sgst,
                     cgst: invoice.cgst,
                     discount: invoice.discount,
-                    total: invoice.total
+                    total: invoice.total,
+                    createdAt:inDate.toLocaleString(),
+                    config:conf,
+                    invoiceId:invoice.id,
+                    toName:invoice.name,
+                    toShopName:invoice.shopName,
+                    toGST:invoice.gst,
+                    toAddress:invoice.address,
+                    toCity:invoice.city,
+                    toState:invoice.state,
+                    toCountry:invoice.country,
+                    toPinCode:invoice.pinCode,
+                    toMobile:invoice.mobile,
+                    toEmail:invoice.email,
+                    logoImage:path.join(__dirname, '../../public/SH.png') 
                 },
                 async (err, html) => {
                     if (err) {
@@ -182,7 +206,9 @@ class InvoiceController{
         }
         catch(err){
             console.log(err);
-            await trans.rollback();
+            if (!transaction.finished) { // Check if transaction is still active
+                await transaction.rollback();
+            }
             return next(err);
         }
         
@@ -303,6 +329,15 @@ class InvoiceController{
              /**
              * Generate PDF
              */
+
+            let conf={};
+            let allConfig=await Config.findAll();
+            allConfig.forEach(element => {
+                conf[element.key]=element.value;
+            });
+
+            let inDate=new Date(invoice.createdAt);
+
              res.render(
                 'admin/invoice/invoice',
                 {
@@ -311,7 +346,21 @@ class InvoiceController{
                     sgst: invoice.sgst,
                     cgst: invoice.cgst,
                     discount: invoice.discount,
-                    total: invoice.total
+                    total: invoice.total,
+                    createdAt:inDate.toLocaleString(),
+                    config:conf,
+                    invoiceId:invoice.id,
+                    toName:invoice.name,
+                    toShopName:invoice.shopName,
+                    toGST:invoice.gst,
+                    toAddress:invoice.address,
+                    toCity:invoice.city,
+                    toState:invoice.state,
+                    toCountry:invoice.country,
+                    toPinCode:invoice.pinCode,
+                    toMobile:invoice.mobile,
+                    toEmail:invoice.email,
+                    logoImage:path.join(__dirname, '../../public/SH.png') 
                 },
                 async (err, html) => {
                     if (err) {

@@ -11,10 +11,15 @@ module.exports = {
       },
       key: {
         type: Sequelize.STRING,
+        unique:true,
         allowNull:false
       },
       value: {
         type: Sequelize.TEXT
+      },
+      fieldType:{
+        type:Sequelize.STRING,
+        defaultValue:'text'
       },
       createdAt: {
         allowNull: false,
