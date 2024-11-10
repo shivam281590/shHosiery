@@ -8,4 +8,5 @@ exports.adminRoutes={
     deleteInvoice:'/invoies/:invoiceId/delete',
     downloadInvoicePDF:'/invoices/:invoiceId/pdf/download',
     pdfViewer:'/invoices/:invoiceId/pdf/viewer',
+    getInvoice:'/get-invoice/:invoiceFileName'
 }

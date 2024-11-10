@@ -1,5 +1,18 @@
 <%- include('../layout/master-top') %>
-<div class="d-flex justify-content-end m-2">
+<div class="d-flex justify-content-end m-2 align-items-center gap-3">
+  <form id="filterForm" class="d-flex align-items-center gap-3 flex-wrap" action="/admin<%-adminRoutes.invoiceList %>"> 
+  <div class="mb-3">
+    <label for="fromDate" class="form-label">From</label>
+    <input onchange="filterFormSub()" type="date" class="form-control" id="fromDate" aria-describedby="emailHelp" name="fromDate" placeholder="select date" value="<%-fromDate??'' %>">
+  </div>
+  <div class="mb-3">
+    <label for="toDate" class="form-label">To</label>
+    <input onchange="filterFormSub()" type="date" class="form-control" id="toDate" aria-describedby="emailHelp" name="toDate" placeholder="select date" value="<%-toDate??'' %>">
+  </div>
+</form>
+<% if(isFilterApplied){ %>
+    <a href="/admin<%-adminRoutes.invoiceList %>" class="btn btn-primary">Reset</a>
+  <% } %>
     <a href="/admin<%-adminRoutes.createInvoice %>" target="_blank" class="btn btn-primary">Create Invoice</a>
 </div>
 <div class="card w-100">
@@ -17,6 +30,9 @@
               </th>
               <th class="border-bottom-0">
                 <h6 class="fw-semibold mb-0">Action</h6>
+              </th>
+              <th class="border-bottom-0">
+                <h6 class="fw-semibold mb-0">Created At</h6>
               </th>
             </tr>
           </thead>
@@ -48,6 +64,10 @@
                     <span class="badge bg-danger rounded-3 fw-semibold ti ti-trash"></span>
                   </div> -->
                 </td>
+                <td class="border-bottom-0">
+                  <% let d=new Date(row.createdAt) %>
+                  <%-d.toLocaleString() %>
+                </td>
               </tr> 
 
             <% }) %>
@@ -58,7 +78,7 @@
     </div>
     <div class="card-body p-4 d-flex justify-content-end">
       <div>
-        <% for(let i=1;(i<=pages) && (pages>1);i++){ %>
+        <% for(let i=1;(i<=pages && !isFilterApplied) && (pages>1);i++){ %>
           <a class="<%-(currentPage===i)?'btn btn-primary m-1':'btn btn-outline-primary' %>" href="/admin<%-adminRoutes.invoiceList %>?page=<%-i  %>"><%-i %></a>
         <% } %>
       </div>
@@ -69,5 +89,13 @@
         event.currentTarget.parentElement.querySelector('form').submit();
       }
     }
+
+    function filterFormSub(){
+      document.getElementById('filterForm').submit();
+      
+      if(document.getElementById('formDate') && document.getElementById('formDate').value!==''){
+      }
+    }
+
   </script>
 <%- include('../layout/master-bottom') %>

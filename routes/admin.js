@@ -33,6 +33,7 @@ router.post(adminRoutes.deleteInvoice,invoiceController.delete);
 router.post(adminRoutes.downloadInvoicePDF,invoiceController.downloadFile);
 // router.get(adminRoutes.generateInvoice,invoiceController.generateInvoice);
 router.get(adminRoutes.pdfViewer,invoiceController.pdfViewer);
+router.get(adminRoutes.getInvoice,invoiceController.accessInvoice);
 
 
 router.get('/', function(req, res, next) {

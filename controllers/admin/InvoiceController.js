@@ -4,6 +4,7 @@ const puppeteer=require('puppeteer');
 const fs=require('fs');
 const path=require('path');
 const {getRootDir}=require('../../utilities/helper');
+const { Op } = require('sequelize');
 
 
 
@@ -13,13 +14,24 @@ class InvoiceController{
     }
 
     getAllInvoice=async(req,res,next)=>{
-        let {page}=req.query;
+        let {page,fromDate, toDate}=req.query;
         page=parseInt(page) || 1;
         let limit=10;
         let offset=(page-1)*limit;
-        let allInvoice= await Invoice.findAll({order:[['createdAt','DESC']],offset,limit});
+        let allInvoice;
+        let isFilterApplied=false;
+        console.log(fromDate,toDate)
+        if (fromDate && fromDate!=='' && toDate && toDate!=='') {
+            isFilterApplied=true;
+            allInvoice= await Invoice.findAll({where:{createdAt:{[Op.between]:[fromDate,toDate]}},order:[['createdAt','DESC']]});
+        } else if (fromDate && fromDate!=='') {
+            isFilterApplied=true;
+            allInvoice= await Invoice.findAll({where:{createdAt:{[Op.gte]:fromDate}},order:[['createdAt','DESC']]});
+        } else {
+            allInvoice= await Invoice.findAll({order:[['createdAt','DESC']],offset,limit});
+        }
         let pages=await Invoice.count();
-        return res.render('admin/invoice/index',{pageTitle:'Invoices',allInvoice,pages:Math.ceil(pages/limit),currentPage:page});
+        return res.render('admin/invoice/index',{pageTitle:'Invoices',allInvoice,pages:Math.ceil(pages/limit),currentPage:page,isFilterApplied,fromDate,toDate});
     }
 
     createInvoice=async(req,res,next)=>{
@@ -190,8 +202,13 @@ class InvoiceController{
                         const page = await browser.newPage();
                         await page.setContent(html);
                         const pdfBuffer = await page.pdf({ format: 'A4',printBackground: true });
-                        let pdfName=`${invoice.mobile}-${invoice.shopName??'invoice'}-${parseInt(invoice.id)}.pdf`;
-                        let filePath=path.resolve(getRootDir(),'storage/public/invoice', pdfName);
+                        let shN='new';
+                        if(invoice.shopName && invoice.shopName!==''){
+                            shN=invoice.shopName.trim().replaceAll(" ","");
+                        }
+                        let mob=invoice.mobile.trim().replaceAll(" ","");
+                        let pdfName=`${mob}-${shN??'invoice'}-${parseInt(invoice.id)}.pdf`;
+                        let filePath=path.resolve(getRootDir(),'storage/private/invoice', pdfName);
                         fs.writeFileSync(filePath, pdfBuffer);
                     } catch (pdfError) {
                         console.error("Error generating PDF:", pdfError);
@@ -375,8 +392,13 @@ class InvoiceController{
                         const page = await browser.newPage();
                         await page.setContent(html);
                         const pdfBuffer = await page.pdf({ format: 'A4',printBackground: true });
-                        let pdfName=`${invoice.mobile}-${invoice.shopName??'invoice'}-${parseInt(invoice.id)}.pdf`;
-                        let filePath=path.resolve(getRootDir(),'storage/public/invoice', pdfName);
+                        let shN='new';
+                        if(invoice.shopName && invoice.shopName!==''){
+                            shN=invoice.shopName.trim().replaceAll(" ","");
+                        }
+                        let mob=invoice.mobile.trim().replaceAll(" ","");
+                        let pdfName=`${mob}-${shN??'invoice'}-${parseInt(invoice.id)}.pdf`;
+                        let filePath=path.resolve(getRootDir(),'storage/private/invoice', pdfName);
                         fs.writeFileSync(filePath, pdfBuffer);
                     } catch (pdfError) {
                         console.error("Error generating PDF:", pdfError);
@@ -479,7 +501,8 @@ class InvoiceController{
                         await page.setContent(html);
                         const pdfBuffer = await page.pdf({ format: 'A4',printBackground: true });
                         let pdfName=`${invoice.mobile}-${invoice.shopName??'invoice'}-${parseInt(invoice.id)}.pdf`;
-                        let filePath=path.resolve(getRootDir(),'storage/public/invoice', pdfName);
+                        // let filePath=path.resolve(getRootDir(),'storage/public/invoice', pdfName);
+                        let filePath=path.resolve(getRootDir(),'storage/private/invoice', pdfName);
                         fs.writeFileSync(filePath, pdfBuffer);
                     } catch (pdfError) {
                         console.error("Error generating PDF:", pdfError);
@@ -499,9 +522,15 @@ class InvoiceController{
             where: { id: req.params.invoiceId },
             include: 'items'
         });
-        let pdfName=`${invoice.mobile}-${invoice.shopName??'invoice'}-${parseInt(invoice.id)}.pdf`;
+        let shN='new';
+        if(invoice.shopName && invoice.shopName!==''){
+            shN=invoice.shopName.trim().replaceAll(" ","");
+        }
+        let mob=invoice.mobile.trim().replaceAll(" ","");
+        let pdfName=`${mob}-${shN??'invoice'}-${parseInt(invoice.id)}.pdf`;
         return res.render('admin/invoice/pdf-viewer',{
-            url:'/storage/invoice/'+pdfName,
+            // url:'/storage/invoice/'+pdfName,
+            url:'/admin'+res.locals.adminRoutes.getInvoice.replace(':invoiceFileName',pdfName),
             pageTitle:'Invoice PDF',
             invoiceId:invoice.id
         });
@@ -512,14 +541,31 @@ class InvoiceController{
             where: { id: req.params.invoiceId },
             include: 'items'
         });
-        let pdfName=`${invoice.mobile}-${invoice.shopName??'invoice'}-${parseInt(invoice.id)}.pdf`;
-        let filePath=path.join(__dirname,'../../public/storage/invoice/',pdfName);
+        let shN='new';
+        if(invoice.shopName && invoice.shopName!==''){
+            shN=invoice.shopName.trim().replaceAll(" ","");
+        }
+        let mob=invoice.mobile.trim().replaceAll(" ","");
+        let pdfName=`${mob}-${shN??'invoice'}-${parseInt(invoice.id)}.pdf`;
+        // let pdfName=`${invoice.mobile}-${invoice.shopName??'invoice'}-${parseInt(invoice.id)}.pdf`;
+        // let filePath=path.join(__dirname,'../../public/storage/invoice/',pdfName);
+        let filePath=path.join(__dirname,'../../storage/private/invoice/',pdfName);
         return res.download(filePath, pdfName, (err) => {
             if (err) {
                 console.error('File download error:', err);
                 return res.status(500).send('Error downloading file.');
             }
         });
+    }
+
+    accessInvoice=async (req,res,next)=>{
+        if (req.session.authUser && Number(req.session.authUser.is_admin)===1) {
+            const filePath = path.join(__dirname,'../../storage/private/invoice/', `${req.params.invoiceFileName}`);
+            return res.sendFile(filePath);
+        } else {
+            return res.status(404).render('errors/404');
+        }
+
     }
 }
 
